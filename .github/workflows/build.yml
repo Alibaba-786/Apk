@@ -12,8 +12,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.12'
 
@@ -23,12 +26,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - uses: actions/checkout@v4
-
       - name: Install buildozer
         run: |
-          pip install --upgrade pip
-          pip install buildozer
+          pip install --upgrade pip setuptools wheel
+          pip install git+https://github.com/kivy/buildozer.git@master
 
       - name: Install Linux dependencies
         run: |
@@ -40,7 +41,7 @@ jobs:
           yes | buildozer -v android debug
 
       - name: Upload APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: TicTacToe-APK
           path: bin/*.apk
